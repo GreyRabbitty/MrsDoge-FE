@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 import axios from 'axios'
-// import CountdownTimer from "../../Components/CountdownTimer";
 
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -9,7 +8,6 @@ import {
   PRIOR_BUYER_BENEFIT_ARR,
   COST_PER_TICKET,
   TREASURE_WALLET_ADDRESS,
-  WITHDRAW_FACTOR,
 } from "../../Constants";
 
 import 'react-toastify/dist/ReactToastify.css';
@@ -48,11 +46,8 @@ function Home() {
 
   const [PotPrice, setPotPrice] = useState(0);
   const [realPotPrice, setRealPotPrice] = useState(0);
-  const [holderRarity, setHolderRarity] = useState('Common');
 
   const [end, setEnd] = useState(false);
-
-  const [rarityList, setRarityList] = useState(null);
 
   const [roundNumber, setRoundNumber] = useState(null);
   const [totalTicket, setTotalTicket] = useState(0);
@@ -85,7 +80,6 @@ function Home() {
   });
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [faqModal, setFaqModal] = useState(false);
 
   // Define function
 
@@ -101,7 +95,7 @@ function Home() {
       let accounts = await (window as any).unisat.requestAccounts();
       SetAddress(accounts[0]);
       console.log('connect success', accounts[0]);
-      const reply = await axios.post("http://146.19.215.121:5432/api/brc/getInfo", {
+      const reply = await axios.post("http://localhost:5432/api/brc/getInfo", {
         address: accounts[0],
         tickerName: 'MEMQ'
       });
@@ -123,7 +117,7 @@ function Home() {
   }
 
   const getOwnTicketList = async () => {
-    const reply = await axios.get("http://146.19.215.121:5432/api/getOwnTicketList");
+    const reply = await axios.get("http://localhost:5432/api/getOwnTicketList");
     console.log('getOwnTicketList ==> ', reply.data);
 
     let list = reply.data;
@@ -148,49 +142,12 @@ function Home() {
     })
     console.log('calcRealPot ==> ', calcRealPotAmount)
     setRealPotPrice(calcRealPotAmount);
+    console.log(realPotPrice);
   }
 
   const realPrice = () => {
     console.log('realPrice ==> ', Math.floor(COST_PER_TICKET * (1 - bonusFactor) * selectCount * 100000000) / 100000000);
     return Math.floor(COST_PER_TICKET * (1 - bonusFactor) * selectCount * 100000000) / 100000000;
-  }
-
-  // const realWithdrawPrice = () => {
-  //   return Math.floor(COST_PER_TICKET * (1 - bonusFactor) * WITHDRAW_FACTOR * ownTicket * 100000000) / 100000000;
-  // }
-
-  // const withdrawTicketFunc = async () => {
-  //   try {
-  //     if (address != '') {
-
-  //       const payload = {
-  //         address: address,
-  //         ticketCount: ownTicket
-  //       };
-  //       const reply = await axios.post("http://146.19.215.121:5432/api/withdrawTicket", payload);
-  //       setOwnTicket(reply.data[address]);
-  //       // console.log('Add Time ==> ', selectCount);
-  //       // setAdditionalDate(flag => flag + 30 * selectCount * 1000);
-
-  //       await getOwnTicketList();
-
-  //       await calcRealPot()
-
-  //       toast.success("Withdrawing Ticket successfully!")
-
-  //       console.log('reply => ', reply);
-  //     } else {
-  //       window.open("https://chromewebstore.google.com/detail/unisat-wallet/ppbibelpcjmhbdihakflkdcoccbgbkpo");
-  //     }
-  //   } catch (error) {
-  //     toast.error("Buying Ticket get error!")
-  //     console.log(error)
-  //   }
-  // }
-
-  const giveReward = async () => {
-    console.log('Total Pot Price ==>', realPotPrice);
-    console.log('')
   }
 
   const rarityStaticFunc = () => {
@@ -219,7 +176,7 @@ function Home() {
           btc: realPrice() * 100000000
         };
 
-        const reply = await axios.post("http://146.19.215.121:5432/api/buyticket", payload);
+        const reply = await axios.post("http://localhost:5432/api/buyticket", payload);
         setOwnTicket(reply.data[address]);
         console.log('Add Time ==> ', selectCount);
         // setAdditionalDate(flag => flag + 30 * selectCount * 1000);
@@ -246,7 +203,7 @@ function Home() {
 
   const RewardResult = async () => {
     console.log('RewardResult ==> ==> ==> ==> ==> ==> ==> ==> ==>')
-    const payload = await axios.post("http://146.19.215.121:5432/api/rewardResult", {
+    const payload = await axios.post("http://localhost:5432/api/rewardResult", {
       ended: true
     })
 
@@ -259,7 +216,7 @@ function Home() {
   const getRewardHandler = async () => {
     try {
       console.log("get Reward ==> ", (result as any).resultObj[address]);
-      const payload = await axios.post("http://146.19.215.121:5432/api/withdrawReward", {
+      const payload = await axios.post("http://localhost:5432/api/withdrawReward", {
         address,
         action: 'Withdraw'
       })
@@ -278,7 +235,7 @@ function Home() {
 
   const timerInterval = () => {
     setInterval(async () => {
-      let recentTime = await axios.get("http://146.19.215.121:5432/api/getRoundTime");
+      let recentTime = await axios.get("http://localhost:5432/api/getRoundTime");
       let now = recentTime.data.roundTime;
       if (now > 0) {
         setRoundTime(now);
