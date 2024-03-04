@@ -1,0 +1,29 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+table td {
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+.App {
+    display: flex;
+    justify-content: space-around;
+    font-family: perfect_dos_vga_437;
+    text-align: center;
+    padding-top: 40px;
+  }
+  
+  .time {
+    font-size: 32px;
+  }
+
+@font-face {
+  font-family: "Perfect DOS VGA 437 Font";
+  src: url("/font/perfect_dos_vga_437/Perfect\ DOS\ VGA\ 437.ttf") format("truetype"),
+}
+
+.main-font-style {
+  font-family: "Perfect DOS VGA 437 Font";
+}
